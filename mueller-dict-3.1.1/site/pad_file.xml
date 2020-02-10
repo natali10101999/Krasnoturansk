@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XML_DIZ_INFO>
+	<MASTER_PAD_VERSION_INFO>
+		<MASTER_PAD_VERSION>2.02</MASTER_PAD_VERSION>
+		<MASTER_PAD_EDITOR>vi</MASTER_PAD_EDITOR>
+		<MASTER_PAD_INFO>Portable Application Description, or PAD for short, is a data set that is used by shareware authors to disseminate information to anyone interested in their software products. To find out more go to http://www.asp-shareware.org/pad</MASTER_PAD_INFO>
+	</MASTER_PAD_VERSION_INFO>
+	<Company_Info>
+		<Company_Name>CHG</Company_Name>
+		<Address_1 />
+		<Address_2 />
+		<City_Town>Moscow</City_Town>
+		<State_Province />
+		<Zip_Postal_Code />
+		<Country>Russia</Country>
+		<Company_WebSite_URL>http://chg.fatal.ru</Company_WebSite_URL>
+		<Contact_Info>
+			<Author_First_Name>CHG</Author_First_Name>
+			<Author_Last_Name>CHG</Author_Last_Name>
+			<Author_Email>smersh@users.sourceforge.net</Author_Email>
+			<Contact_First_Name>CHG</Contact_First_Name>
+			<Contact_Last_Name>CHG</Contact_Last_Name>
+			<Contact_Email>smersh@users.sourceforge.net</Contact_Email>
+		</Contact_Info>
+		<Support_Info>
+			<Sales_Email>smersh@users.sourceforge.net</Sales_Email>
+			<Support_Email>smersh@users.sourceforge.net</Support_Email>
+			<General_Email>smersh@users.sourceforge.net</General_Email>
+			<Sales_Phone />
+			<Support_Phone />
+			<General_Phone />
+			<Fax_Phone />
+		</Support_Info>
+	</Company_Info>
+	<Program_Info>
+		<Program_Name>mueller-dict</Program_Name>
+		<Program_Version>3.1</Program_Version>
+		<Program_Release_Month>11</Program_Release_Month>
+		<Program_Release_Day>10</Program_Release_Day>
+		<Program_Release_Year>2006</Program_Release_Year>
+		<Program_Cost_Dollars />
+		<Program_Cost_Other_Code />
+		<Program_Cost_Other />
+		<Program_Type>Freeware</Program_Type>
+		<Program_Release_Status>New Release</Program_Release_Status>
+		<Program_Install_Support>Install and Uninstall</Program_Install_Support>
+		<Program_OS_Support>Not Applicable</Program_OS_Support>
+		<Program_Language>English,Russian</Program_Language>
+		<Program_Change_Info />
+		<Program_Specific_Category>Education</Program_Specific_Category>
+		<Program_Category_Class>Education::Dictionaries</Program_Category_Class>
+		<Program_Categories>Education,Dictionaries</Program_Categories>
+		<Program_System_Requirements />
+		<Includes_JAVA_VM>N</Includes_JAVA_VM>
+		<Includes_VB_Runtime>N</Includes_VB_Runtime>
+		<Includes_DirectX>N</Includes_DirectX>
+		<File_Info>
+			<File_Size_Bytes>6600000</File_Size_Bytes>
+			<File_Size_K>6600</File_Size_K>
+			<File_Size_MB>6.6</File_Size_MB>
+		</File_Info>
+		<Expire_Info>
+			<Has_Expire_Info>N</Has_Expire_Info>
+			<Expire_Count />
+			<Expire_Based_On>Days</Expire_Based_On>
+			<Expire_Other_Info />
+			<Expire_Month />
+			<Expire_Day />
+			<Expire_Year />
+		</Expire_Info>
+	</Program_Info>
+	<Program_Descriptions>
+		<English>
+			<Keywords>English,Russian,dictionary,Mueller,phonetic,transcription,dict,dictd,database,IPA</Keywords>
+			<Char_Desc_45>English-Russian dictionary.</Char_Desc_45>
+			<Char_Desc_80>V. K. Mueller English-Russian dictionary in DICT format.</Char_Desc_80>
+			<Char_Desc_250>English-Russian dictionary in DICT format with phonetic transcription, optimized for proper rendering on text terminals.</Char_Desc_250>
+			<Char_Desc_450>An electronic version of popular English-Russian dictionary by professor V. K. Mueller in format suitable for use with dictd server.  Current version contains more than 50000 articles and represents a full copy of the 7-th edition of mentioned dictionary, with some additions and corrections sourced from the more recent typographical editions.</Char_Desc_450>
+			<Char_Desc_2000>An electronic version of popular English-Russian dictionary by professor V. K. Mueller in format suitable for use with dictd server.  Current version contains more than 50000 articles and represents a full copy of the 7-th edition of mentioned dictionary, with some additions and corrections sourced from the more recent typographical editions.  It includes a phonetic transcription in the IPA (International Phonetic Association) system optimized for proper rendering on text terminals with standard Cyrillic font installed.</Char_Desc_2000>
+		</English>
+		<Russian>
+			<Keywords>англо,русский,словарь,Мюллер,фонетическая,транскрипция,dict,dictd</Keywords>
+			<Char_Desc_45>Англо-Русский словарь в формате DICT.</Char_Desc_45>
+			<Char_Desc_80>Англо-русский словарь В. К. Мюллера в формате DICT.</Char_Desc_80>
+			<Char_Desc_250>Англо-русский словарь В. К. Мюллера в формате DICT с фонетической транскрипцией, оптимизированной для правильного отображения на текстовывх терминалах.</Char_Desc_250>
+			<Char_Desc_450>Электронная версия популярного Англо-Русского словаря В. К. Мюллера в формате DICT.  Текущая редакция содержит более 50000 слов и представляет собой практически полную копию 7 издания вышеупомянутого словаря с некоторыми дополнениями и исправлениями, источником которых послужили более поздние типографские издания.  Словарь содержит фонетическую транскрипцию в системе IPA, и оптимизирован для вывода на текстовые терминалы.</Char_Desc_450>
+			<Char_Desc_2000>Электронная версия популярного Англо-Русского словаря профессора Владимира Карловича Мюллера в формате DICT.  Текущая редакция содержит более 50000 слов и представляет собой практически полную копию 7 издания вышеупомянутого словаря с некоторыми дополнениями и исправлениями, источником которых послужили более поздние типографские издания.  Словарь содержит фонетическую транскрипцию в системе IPA, и оптимизирован для правильного отображения вывода на текстовых терминалах.</Char_Desc_2000>
+		</Russian>
+	</Program_Descriptions>
+	<Web_Info>
+		<Application_URLs>
+			<Application_Info_URL>http://mueller-dict.sourceforge.net</Application_Info_URL>
+			<Application_Order_URL>http://mueller-dict.sourceforge.net</Application_Order_URL>
+			<Application_Screenshot_URL>http://mueller-dict.sourceforge.net/images/screenshot.gif</Application_Screenshot_URL>
+			<Application_Icon_URL>http://mueller-dict.sourceforge.net/images/icon.gif</Application_Icon_URL>
+			<Application_XML_File_URL>http://mueller-dict.sourceforge.net/pad_file.xml</Application_XML_File_URL>
+		</Application_URLs>
+		<Download_URLs>
+			<Primary_Download_URL>http://downloads.sourceforge.net/mueller-dict/mueller-dict-3.1.tar.gz</Primary_Download_URL>
+			<Secondary_Download_URL>http://downloads.sourceforge.net/mueller-dict/mueller-dict-3.1.tar.gz</Secondary_Download_URL>
+			<Additional_Download_URL_1 />
+			<Additional_Download_URL_2 />
+		</Download_URLs>
+	</Web_Info>
+	<Permissions>
+		<Distribution_Permissions>See End User License Agreement.</Distribution_Permissions>
+		<EULA>GNU GENERAL PUBLIC LICENSE, Version 2</EULA>
+	</Permissions>
+</XML_DIZ_INFO>

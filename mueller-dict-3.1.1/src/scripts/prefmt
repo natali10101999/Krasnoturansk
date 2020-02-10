@@ -1,0 +1,152 @@
+#! /usr/bin/perl -w
+#
+# align, replace tabs, etc.
+#
+# created: Tue, 12 Jul 2005 23:42:09 +0500 CHG
+# changed: Tue, 19 Sep 2006 01:31:00 +0500 CHG
+# changed: Mon, 10 Jan 2011 18:54:19 +0300 vlh
+
+use Getopt::Std;
+use Encode;
+use utf8;
+
+binmode(STDOUT, ':encoding(utf8)');
+
+$Getopt::Std::STANDARD_HELP_VERSION = 1;
+
+$margin = 74;  # right margin of text (inclusive)
+$tab_sp = 4;   # num. of spaces to replace tabs
+
+$i = 10;
+$indent = 0;
+$done_l = -1;
+
+getopts('qh', \%opts) or HELP_MESSAGE(STDERR) && exit(1);
+$opts{h} and HELP_MESSAGE(STDERR) && exit;
+$opts{q} and $quiet = 1;
+
+while(<>) {
+	$_ = Encode::decode('utf8', $_);
+	$i++;
+
+	# print gauge
+	unless($quiet) {
+		$size = (stat(ARGV))[7] unless $size;
+		if($size) {
+			$done = int(tell(ARGV)/$size*100);
+			if($done != $done_l) {
+				print STDERR "\rProcessed: $done%";
+				$done_l = $done;
+			}
+		} else {
+			$quiet=1;
+		}
+	}
+
+	if(/^_____/) {  # begin of article
+		$i = 0;
+		print(align($t, $indent)) if defined($t);
+		undef $t;
+		$indent = 0;
+	}
+
+	s/\t/' ' x $tab_sp/eg;  # expand tabs
+
+	if(/^@/ || $i < 3) {  # headers
+		s/ +$//;  # remove trailing spaces
+		print;
+		next;
+	}
+
+	unless(defined($t)) {
+		my($n) = /^( +)/;
+		$indent = length($n) if defined($n);
+	}
+
+	if(/^$/) {  # begin of paragraph
+		print(align($t, $indent)) if defined($t);
+		undef $t;
+		$indent = 0;
+		print "\n";
+		next;
+	}
+
+	$t .= $_;
+}
+
+print(align($t, $indent)) if defined($t);
+print STDERR "\n" unless $quiet;  # terminate gauge line
+
+
+#
+# align string with left indent
+#
+sub align {
+	my($text, $indent) = @_;
+
+	my $pos = $indent;
+	my $res = ' ' x $indent;
+
+	$text =~ s/^\s*(.*)\s*$/$1/;
+	$text =~ s/\s+/ /g;
+
+	# hold with previous word
+	$text =~ s/ (--? )/\x00$1/g;
+	$text =~ s/ (= )/\x00$1/g;
+
+	# hold with the next word
+	$text =~ s/([^-] [абвгдеёжзийклмнопрстуфхцчшщъыьэюя]\):?) /$1\x00/g;
+
+	@text = split(' ', $text);
+
+	foreach $word (@text) {
+		my $l = length($word);
+
+		if($pos+$l < $margin) {
+			if($pos > $indent) {
+				$res .= ' ';
+				$pos++;
+			}
+			$res .= "$word";
+			$pos += $l
+		} else {
+			$res .= "\n".(' ' x $indent).$word;
+			$pos = $indent + $l;
+		}
+	}
+
+	$res =~ s/\x00/ /g;
+
+	return $res."\n";
+}
+
+sub usage {
+	my $code = defined($_[0]) ? $_[0]:1;
+
+	print STDERR <<_eof;
+Usage: $0 [-h|-q]
+
+Options:
+  -h    display this help and exit
+  -q    be quiet
+_eof
+
+	exit($code);
+}
+
+sub HELP_MESSAGE {
+    my $fh = shift;
+
+    print $fh <<EOL;
+Using:
+  $0 [-h|-q] [FILE]
+
+Options:
+  -q                  be quiet
+  -h, --help          give this help and exit
+EOL
+}
+
+sub VERSION_MESSAGE {}
+
+__END__

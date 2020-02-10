@@ -1,0 +1,98 @@
+#! /usr/bin/perl -w
+#
+# character encoding converter for mueller-dict package
+#
+# created: Wed, 27 Sep 2006 18:50:22 +0500 CHG
+
+use 5.8.0;
+use Encode;
+
+use Getopt::Std;
+$Getopt::Std::STANDARD_HELP_VERSION = 1;
+
+# default encodings
+$from = 'koi8-r';
+$to = 'utf-8';
+
+getopts('qhpt:f:', \%opts) or HELP_MESSAGE(STDERR) && exit(1);
+$opts{h} and HELP_MESSAGE(STDERR) && exit;
+$opts{f} and $from = $opts{f};
+$opts{t} and $to = $opts{t};
+$opts{p} and $p = 1;
+$opts{q} and $q = 1;
+
+binmode(STDIN, ":encoding($from)") && binmode(STDOUT, ":encoding($to)") or
+	exit(1);
+
+if($p && !eval('my $c = "\x{02a4}"; encode($to, $c, 1);')) {
+	undef $p;
+	$q or print STDERR "$0: warning: you can use option `-p' only in unicode mode. Ignored.\n";
+}
+
+while(<>){
+	$p and s/\[(.+?)\]/'['.conv_ipa($1).']'/ge;
+	print;
+};
+
+exit;
+
+
+# Convert transcription into Unicode
+# (http://www.phon.ucl.ac.uk/home/wells/ipa-unicode.htm)
+#
+# Grouped symbols substitution table
+# -------------------------------
+# Input  Input group       Subst.
+# group  (in hex.form)     code
+# -------------------------------
+# dÚ     \x{0064}\x{0437}  0x02a4
+# tS     \x{0074}\x{0053}  0x02a7
+# -------------------------------
+#
+# Single symbols replacement table
+# ----------------------
+# From    From    To
+# symbol  code    code
+# ----------------------
+# ú       0x0417  0x00f0
+# E       0x0045  0x025b
+# I       0x0049  0x026a
+# N       0x004e  0x014b
+# ü       0x042d  0x00e6
+# S       0x0053  0x0283
+# æ       0x0424  0x03b8
+# Ú       0x0437  0x0292
+# O       0x004f  0x0254
+# Ü       0x044d  0x0259
+# A       0x0041  0x028c
+# '       0x0027  0x02c8
+# ,       0x002c  0x02cc
+# ----------------------
+sub conv_ipa {
+	my $s = shift;
+
+	$s =~ s/d\x{0437}/\x{02a4}/g;
+	$s =~ s/tS/\x{02a7}/g;
+
+	$s =~ tr/\x{0417}EIN\x{042d}S\x{0424}\x{0437}O\x{044d}A',/\x{00f0}\x{025b}\x{026a}\x{014b}\x{00e6}\x{0283}\x{03b8}\x{0292}\x{0254}\x{0259}\x{028c}\x{02c8}\x{02cc}/;
+	return $s;
+}
+
+sub HELP_MESSAGE {
+    my $fh = shift;
+
+    print $fh <<EOL;
+Using:
+  $0 [-f <from_encoding>] [-t <to_encoding>] [-p] [-q] [FILE]
+  $0 -h
+
+Options:
+  -f <from_encoding>  encoding for input (default, KOI8-r)
+  -t <to_encoding>    encoding for output (default, UTF-8)
+  -p                  convert phonetic transcription into unicode
+  -q                  be quiet
+  -h, --help          give this help and exit
+EOL
+}
+
+sub VERSION_MESSAGE {}

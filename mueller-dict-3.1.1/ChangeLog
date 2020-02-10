@@ -1,0 +1,51 @@
+Mon, 10 Jan 2011 19:30:39 +0300  vlh <vlakhadzhi@wiley.com>
+
+    * Corrections in mueller-base.
+    * Minor changes in src/scripts/prefmt and configure.ac
+    * Dictionaries precompiled with:
+      ./configure --enable-preformat --enable-IPA-unicode
+    * Release 3.11
+
+30 nov 2008 beta
+
+    * Bugfixies in dictionary articles.
+    * Encoding of source files changed to UTF-8.
+
+Mon, 02 Oct 2006 23:14:59 +0500 CHG <smersh@users.sourceforge.net>
+
+    * New building system based on GNU autoconf.
+    * Old `dict' and `src' archives merged into the single package.
+    * Corrections in `mueller-base'.
+    * New script `src/scripts/conv' allows optionally convert phonetic
+    transcription into the IPA Unicode (option -p).
+    * New release 3.1:
+      mueller-dict 2005.09.19
+      mueller-base 2006.09.24
+      mueller-names 2005.09.19
+      mueller-abbrev 2005.09.19
+      mueller-geo 2005.09.19
+
+October 2005 CHG <smersh@users.sourceforge.net>
+
+    * About 200 new words added.
+    * New introductory part `mueller-dict' added.
+    * Corrections in the dictionary files.
+    * Source format changed.
+    * Default output charset encoding changed from KOI8-r to UTF-8.
+    * Release 3.0:
+      mueller-dict 2005.09.19
+      mueller-base 2005.09.19
+      mueller-names 2005.09.19
+      mueller-abbrev 2005.09.19
+      mueller-geo 2005.09.19
+
+September 2004 CHG <smersh@users.sourceforge.net>
+
+    * About 3000 new words added.
+    * Corrections in the dictionary files.
+    * Dictionary database divided into the 4 independent parts.
+    * Release 2.0
+
+April 2004 CHG <smersh@users.sourceforge.net>
+
+    * First release 1.0

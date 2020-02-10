@@ -1,0 +1,13 @@
+# dict.cgi: bottom of page
+
+my $email = 'smersh@users.sourceforge.net';
+my $version = VERSION;
+
+$foot = <<END;
+</td></tr></table>
+</td></tr></table>
+<hr noshade size=1>
+<address>dict.cgi v$version &copy; 2005
+	<a href="mailto:$email">CHG</a>
+</address>
+END

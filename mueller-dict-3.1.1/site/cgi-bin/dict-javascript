@@ -1,0 +1,119 @@
+# dict.cgi: client-side functions
+
+my $on_load = param("scroll") && $has_body ?
+	"document.location.hash = 'defs';" :
+	"if(document.location.toString().indexOf('#') == -1) document.form.word.focus();";
+
+$javascript = <<END;
+var link_type;
+
+function on_load() {
+	$on_load
+}
+
+function override_link(event) {
+	var link;
+	with(event){
+		if(target)
+			link =target;
+		else if(srcElement)
+			link = srcElement;
+		else
+			return;
+	}
+
+	var href = document.form.action+"?"+form_args();
+
+	var a;
+	if((a=get_arg(link.href, link_type)) != '')
+		href += a+"$arg_sep";
+
+	if(link_type == "lang") {
+		if(document.form.charset)
+			href += "charset="+document.form.charset.value;
+	} else if(link_type == "charset") {
+		href += "q_enc=utf8${arg_sep}";
+		if(document.form.lang)
+			href += "lang="+document.form.lang.value;
+	}
+
+	var l = href.length;
+	var c = href.charAt(l-1);
+	if(c=="?" || c=="&" || c==";")
+		href=href.substr(0, l-1);
+
+	link.href = href;
+}
+
+function get_arg(str, arg_name) {
+	var start;
+
+	if((start=str.indexOf("?"+arg_name+"=")) == -1)
+		if((start=str.indexOf(";"+arg_name+"=")) == -1)
+			if((start=str.indexOf("&"+arg_name+"=")) == -1)
+				return '';
+	start++;
+
+	var end = str.indexOf(";", start);
+	var end1 = str.indexOf("&", start);
+
+	if(end1 == -1) {
+		if(end == -1) end = str.length;
+	} else {
+		if(end == -1 || end > end1) end = end1;
+	}
+
+	return str.substring(start, end);
+}
+
+function form_args() {
+	var query = '';
+	var i=0, e;
+
+	with(document.form) {
+		if(word.value.length)
+			query = "word="+escape(word.value)+"$arg_sep";
+
+		while(e=elements[i++]) {
+			if(e.name == "dict" && e.checked) {
+				query += "dict="+e.value+"$arg_sep";
+			}
+		}
+
+		if(spell.checked) query += "spell=on$arg_sep";
+
+		if(ipa.checked) query += "ipa=on$arg_sep";
+
+		if(scroll.checked) query += "scroll=on$arg_sep";
+	}
+
+	return query;
+}
+
+function check_form() {
+	var i=0, f=false, e;
+
+	with(document.form) {
+		if(!word.value.length) {word.focus(); return false;}
+
+		while(e = elements[i++])
+			if(e.name == "dict" && e.checked) {f=true; break;}
+
+		if(!f) {
+			i = 0;
+			while(e = elements[i++])
+				if(e.name == "dict") e.checked = true;
+		}
+	}
+
+	return true;
+}
+
+function go_top() {
+	with(document) {
+		scrollTo(0, 0);
+		form.word.select();
+		form.word.focus();
+	}
+}
+END

@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta name="description" content="English-Russian Dictionary in DICT Format" />
+<meta name="keywords" content="english russian dictionary dictd transcription" />
+<title>English-Russian Dictionary Database in DICT Format</title>
+<link rel=StyleSheet href=style.css type=text/css />
+<meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+<script language=JavaScript type="text/javascript" src=script.js></script>
+</head>
+<body>
+
+<table width=100%><tr><td>
+
+<table width=100% border=0 cellspacing=0 cellpadding=0>
+<tr><td class=hdr height=15>&nbsp;</td></tr>
+<tr><td class=hdr align=center valign=middle>
+<br /><h1>English-Russian Dictionary Database in DICT Format</h1>
+</td></tr>
+<tr><td class=hdr height=15>&nbsp;</td></tr>
+</table>
+
+<table width=100% border=0 cellspacing=0 cellpadding=15>
+<tr>
+<td valign=top class=left-panel>
+<p align=left><b>
+<a href="http://www.sourceforge.net/projects/mueller-dict/">Project Info</a><br />
+<a href="http://sourceforge.net/project/showfiles.php?group_id=125987">Download</a><br /><br />
+Russian version:<br />
+-&nbsp;<a href="index-koi8r.html">UNIX</a><br />
+-&nbsp;<a href="index-windows1251.html">Windows</a><br />
+-&nbsp;<a href="index-iso88595.html">ISO</a><br />
+-&nbsp;<a href="index-cp866.html">DOS</a><br />
+-&nbsp;<a href="index-utf8.html">UTF</a><br />
+-&nbsp;<a href="index-maccyrillic.html">Mac</a>
+</b></p>
+<center>
+<a href="http://sourceforge.net"><img src="http://sourceforge.net/sflogo.php?group_id=125987&amp;type=4" width="125" height="37" border="0" alt="SourceForge.net Logo" /></a>
+</center>
+<hr>
+<center>
+<a name=a href="#a" onclick="return form_show();"><img src=images/down-arrow.gif border=0 alt=""></a>
+<p><small>
+You can test dictionary right from here.
+Enter English word into the text area below
+and push the button <b>Translate</b>.
+</small></p>
+</center>
+<form name=form method=get action=http://mueller-dict.sourceforge.net/cgi-bin/dict.cgi enctype=application/x-www-form-urlencoded onsubmit="return on_submit();" target=new_window><center>
+<strong>Enter word:</strong><br>
+<input type=text name=word  size=15 maxlength=80><br>
+<input type=submit value=Translate>
+<input type=hidden name=dict value=mueller-abbrev>
+<input type=hidden name=dict value=mueller-base>
+<input type=hidden name=dict value=mueller-geo>
+<input type=hidden name=dict value=mueller-names>
+<input type=hidden name=scroll value=on>
+</center></form>
+</td>
+
+<td class=right-panel align=left valign=top width=100%>
+
+<h2>Description</h2>
+
+<p>An electronic version of
+English-Russian dictionary by V. K. Mueller
+in format suitable for use with
+<a href="http://www.dict.org/">dictd</a> server.
+Current version contains more than 50000 articles and
+represents a full copy of
+the 7-th edition of mentioned dictionary,
+with some additions and corrections
+sourced from the more recent typographical editions.
+It includes a phonetic transcription in the IPA 
+(International Phonetic Association) system optimized for
+proper rendering on text terminals
+with standard Cyrillic font installed.</p>
+
+<p>Originally this project was derived from
+<a href="http://starling.rinet.ru/">the work of Sergey Starostin</a>.
+
+<h2>Installation</h2>
+
+<ul>
+
+<li>Download and unpack the distribution archive:
+
+<pre>$ tar xjf mueller-dict-&lt;version&gt;.tar.bz2</pre>
+or
+<pre>$ tar xzf mueller-dict-&lt;version&gt;.tar.gz</pre>
+
+<li>Configure the package for your system:
+
+<pre>$ cd mueller-dict-&lt;version&gt;
+$ ./configure [options]</pre>
+
+Script <i>configure</i> recognizes the following additional custom options:
+
+<table border=0>
+<tr valign=top>
+<td nowrap>--enable-preformat</td>
+<td>preformat (autoindent, align lines, convert tabs to spaces, etc.)
+source files before processing</td>
+</tr>
+<tr valign=top>
+<td nowrap>--enable-IPA-unicode</td>
+<td>convert symbols of phonetic transcription into IPA Unicode</td>
+</tr>
+<tr valign=top>
+<td nowrap>--disable-compression</td>
+<td>do not compress dictionary files</td>
+</tr>
+<tr valign=top>
+<td nowrap>--enable-locale=&lt;locale&gt;</td>
+<td>locale used for index files sorting (by default, <b>en_US.utf-8</b>)</td>
+</tr>
+<tr valign=top>
+<td nowrap>--enable-charset=&lt;charset&gt;</td>
+<td>output charset encoding (by default, <b>UTF-8</b>)</td>
+</tr>
+</table>
+
+<li>Build dictionary files:
+
+<pre>$ make</pre>
+
+Since distribution already contains ready to install files,
+builded with default options,
+this step is optional and required only if you want to rebuild package
+with custom futures enabled.
+In this case you must <i>make distclean</i> before reconfiguring.
+
+<li>Install dictionary:
+
+<pre>$ make install</pre>
+
+By default, this command will install  files in
+<i>/usr/local/share/dict</i>.
+You can specify an installation prefix other than
+<i>/usr/local</i> by giving <i>configure</i> the
+option <i>--prefix=PREFIX</i>.
+
+<li>Add dictionary specifications to the dictd configuration file
+(usually <i>/etc/dictd.conf</i>):
+<pre>database mueller-abbrev {
+  data  /usr/local/share/dict/mueller-abbrev.dict.dz
+  index /usr/local/share/dict/mueller-abbrev.index
+}
+database mueller-base {
+  data  /usr/local/share/dict/mueller-base.dict.dz
+  index /usr/local/share/dict/mueller-base.index
+}
+database mueller-dict {
+  data  /usr/local/share/dict/mueller-dict.dict.dz
+  index /usr/local/share/dict/mueller-dict.index
+}
+database mueller-geo {
+  data  /usr/local/share/dict/mueller-geo.dict.dz
+  index /usr/local/share/dict/mueller-geo.index
+}
+database mueller-names {
+  data  /usr/local/share/dict/mueller-names.dict.dz
+  index /usr/local/share/dict/mueller-names.index
+}</pre>
+
+<i>Change paths to correspond with your installation.</i>
+
+<li>Restart dictd daemon or send SIGHUP signal to it.
+
+</ul>
+
+See the INSTALL file for additional notes.
+Also try <i>man dictd</i>. 
+
+</td>
+</tr>
+</table>
+
+</td></tr></table>
+
+<hr>
+<address>Maintained by <a href="mailto:smersh@users.sourceforge.net">CHG</a> 2004-2006</address>
+
+</body>
+</html>

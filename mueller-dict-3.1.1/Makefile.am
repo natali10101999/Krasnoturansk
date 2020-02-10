@@ -1,0 +1,2 @@
+SUBDIRS = site src dict
+EXTRA_DIST = README README.koi8r

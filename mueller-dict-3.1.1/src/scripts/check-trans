@@ -1,0 +1,108 @@
+#! /usr/bin/perl -w
+#
+# validate phonetic transcription
+#
+
+use File::Basename;
+
+use Getopt::Std;
+$Getopt::Std::STANDARD_HELP_VERSION = 1;
+
+$name = basename($0);
+$exit_code = 0;
+
+getopts('th', \%opts) or HELP_MESSAGE(STDERR) && exit(1);
+$opts{h} and HELP_MESSAGE(STDERR) && exit;
+$opts{t} and $term = 1;
+
+%ph2say = (
+	'p'  => 'p',
+	'b'  => 'b',
+	't'  => 't',
+	'd'  => 'd',
+	'k'  => 'k',
+	'm'  => 'm',
+	'n'  => 'n',
+	'l'  => 'l',
+	'r'  => 'r',
+	'f'  => 'f',
+	'v'  => 'v',
+	's'  => 's',
+	'z'  => 'z',
+	'h'  => 'h',
+	'w'  => 'w',
+	'g'  => 'g',
+	'S'  => 'S',
+	'N'  => 'N',
+	'æ'  => 'T',
+	'ú'  => 'D',
+	'Ú'  => 'Z',
+	'j'  => 'j',
+	'I'  => 'I',
+	'e'  => 'e',
+	'i:' => 'i',
+	'a:' => 'A',
+	'O:' => 'O',
+	'u:' => 'u',
+	'Ü:' => '3R',
+	'ü'  => '&',
+	'A'  => 'V',
+	'O'  => '0',
+	'u'  => 'U',
+	'Ü'  => '@',
+	'OI' => 'oI',
+	'E'  => 'e',
+#	'o'  => '@',
+	'a'  => 'a',
+	"'"  => "'",
+	'`'  => ',',  # for backward compability
+	','  => ','
+);
+
+while(<>) {
+	while (/\[(.+?)\]/g) {
+		check($1, $.);
+	}
+}
+
+exit($exit_code);
+
+
+sub check {
+	my $phonet = shift;
+	my $line = shift;
+
+	my $l = length($phonet);
+	my $i = 0;
+	my $c;
+
+	while($i < $l) {
+		if(exists($ph2say{$c = substr($phonet, $i, 2)})) {
+			$i += 2; next;
+		} elsif(exists($ph2say{$c = substr($phonet, $i, 1)})) {
+			$i++; next;
+		}
+
+		print STDERR "$name: line $line: illegal symbol '$c' in [$phonet]\n";
+		$term and exit(1);
+		$exit_code = 1;
+		$i++;
+	}
+}
+
+sub HELP_MESSAGE {
+    my $fh = shift;
+
+    print $fh <<EOL;
+Using:
+  $0 [-h|-t] [FILE]
+
+Options:
+  -t                  terminate after first error
+  -h, --help          give this help and exit
+EOL
+}
+
+sub VERSION_MESSAGE {}
+
+__END__

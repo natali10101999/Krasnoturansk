@@ -1,0 +1,38 @@
+#! /bin/sh
+#
+# update-dict-db 
+#
+# created: Wed, 14 Sep 2005 13:31:37 +0500 CHG
+#
+set -e
+
+if [ $# -ne 1 ]; then
+	echo "Usage: $0 <release>"
+	exit 1
+fi
+
+RELEASE=$1
+
+DEST_DIR="/home/groups/m/mu/mueller-dict/data/"
+BASENAME="mueller-dict-$RELEASE"
+SERVER_PATH="http://prdownloads.sourceforge.net/mueller-dict/"
+LOCKFILE='.lock'
+MKDATADIR="/home/groups/m/mu/mueller-dict/bin/mkdatadir"
+
+cd "$DEST_DIR"
+
+if fuser "$LOCKFILE" &>/dev/null; then
+	echo "Directory '`pwd`' locked by another process"
+	exit 1
+fi
+exec 3>"$LOCKFILE"
+
+wget -c "$SERVER_PATH$BASENAME.tar.gz"
+tar zxvf "$BASENAME.tar.gz" '*.index' '*.dz'
+mv "$BASENAME"/*.{dz,index} .
+rm -r "$BASENAME"
+rm "$BASENAME.tar.gz"
+yes |$MKDATADIR .
+
+exec 3>&-
+rm -f "$LOCKFILE"

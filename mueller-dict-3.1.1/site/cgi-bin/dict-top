@@ -1,0 +1,75 @@
+# dict.cgi: top of page
+
+# external links
+
+my $url_home_page = 'http://mueller-dict.sourceforge.net/';
+my $url_project_download = 'http://prdownloads.sourceforge.net/mueller-dict/';
+my $url_project_info = 'http://www.sourceforge.net/projects/mueller-dict/';
+
+# counter/logotype 125x37
+
+my $counter = '<a href="http://sourceforge.net"><img src="http://sourceforge.net/sflogo.php?group_id=125987&amp;type=4" width="125" height="37" border="0" alt="SourceForge.net Logo"></a>';
+
+# left panel menu
+
+my $img = img({-src=>"${config::images}earth.gif", -alt=>'', -border=>0,
+	attr_gif_size("${config::images_path}earth.gif"), -align=>'bottom'});
+my $script = "link_type='lang';override_link(event);return true;";
+my $home_page_ru = $url_home_page;
+$home_page_ru .= '/' if $home_page_ru !~ m|/$|;
+$home_page_ru .= 'index-'.normalize($charset).'.html';
+
+my $menu = decode('koi8-r',($lang eq 'ru') ? <<END_RU : <<END_EN);
+	<a href="$home_page_ru">${img}&nbsp;Домой</a><br>
+	<a href="$url_project_info">${img}&nbsp;О Проекте</a><br>
+	<a href="$url_project_download">${img}&nbsp;Скачать</a><br><br>
+	<a href="%s" onclick="$script">English Interface</a>
+END_RU
+	<a href="$url_home_page">${img}&nbsp;Home Page</a><br>
+	<a href="$url_project_info">${img}&nbsp;Project Info</a><br>
+	<a href="$url_project_download">${img}&nbsp;Download</a><br><br>
+	<a href="%s" onclick="$script">Русский Интерфейс</a>
+END_EN
+
+$menu = sprintf($menu,create_query(lang=>($lang eq 'ru' ? 'en' : 'ru')));
+
+my $help = defined($config::say) ? center({-class=>'note'},
+	a({-href=>sprintf($config::say, '[test]'), -target=>'player_window'},
+		img({-src=>$config::images.'speaker.gif', -border=>0,
+		attr_gif_size($config::images_path.'speaker.gif'), -alt=>'test'})
+	).br.get_str('help',$lang)) : '';
+
+my $title = get_str('title',$lang);
+
+$top = <<END;
+<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr>
+<td>
+
+<!-- caption -->
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td height="15" class="hdr">&nbsp;</td>
+	</tr>
+	<tr><td class="hdr" align="center" valign="middle">
+			<br><h1>$title</h1>
+	</td></tr>
+	<tr>
+		<td height="15" class="hdr">&nbsp;</td>
+	</tr>
+</table>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="15">
+<tr>
+
+<!-- left panel -->
+<td valign="top" class="left-panel">
+	<p><b>$menu</b></p>
+	<hr noshade size=1>
+	<center>$counter</center>
+	<hr noshade size=1>
+	$help
+</td>
+
+<!-- right panel -->
+<td align="left" valign="top" class="right-panel" width="100%">
+END

@@ -1,0 +1,123 @@
+body {
+	font: 10pt serif;
+	color: black;
+	background: white;
+}
+a:link {
+	color: blue;
+	background: transparent;
+}
+a:active {
+	color: red;
+	background: transparent;
+}
+a:visited {
+	color: navy;
+	background: transparent;
+}
+.hdr {
+	color: white;
+	background: navy;
+}
+h1 {
+	font: 20pt sans-serif;
+}
+h2 {
+	font-family: sans-serif;
+}
+#textfield {
+	font-family: monospace;
+}
+#button {
+	background: silver;
+}
+.tbl {
+	color: black;
+	background: #eeeeff;
+}
+.prompt {
+	color: black;
+	background: transparent;
+}
+.msg {
+	font-weight: bold;
+	color: red;
+	background: transparent;
+}
+.headword {
+	color: maroon;
+	background: transparent;
+	font-size: 120%;
+	font-weight: bold;
+}
+.abbrev {
+	color: teal;
+	background: transparent;
+	font-style: italic;
+}
+.note {
+	color: black;
+	background: transparent;
+}
+.left-panel {
+	color: black;
+	background: #cccccc;
+}
+.right-panel {
+	color: black;
+	background: white;
+}
+#news-tbl {
+	margin-top: 0;
+	margin-bottom: 10pt;
+	margin-left: 10pt;
+	margin-right: 0;
+	background: navy;
+}
+#news-tbl ul {
+	margin-top: 0;
+	margin-bottom: 15pt;
+	margin-left: 15pt;
+	margin-right: 0;
+}
+#news-tbl ol {
+	margin-top: 0;
+	margin-bottom: 0;
+	margin-left: 15pt;
+	margin-right: 0;
+}
+#enc-tbl {
+	margin-top: 10pt;
+	margin-bottom: 10pt;
+}
+.wonb {
+	color: white;
+	background: black;
+}
+.letter {
+	font-size: 16px;
+}
+.article {
+	font: 10pt/11pt monospace;
+	margin: 0 0 0 0;
+}
+.phonet, a.phonet {
+	color: black;
+	background: transparent;
+	font-weight: bold;
+	text-decoration: none;
+}
+.lat {
+	color: maroon;
+	background: transparent;
+}
+.ord {
+	color: navy;
+	background: transparent;
+	font-weight: bold;
+}
+.rep {
+	text-align: right;
+	margin: 0 0 0 0;
+	font-size: smaller;
+}

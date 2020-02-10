@@ -1,0 +1,55 @@
+#! /usr/bin/perl -w
+# $Id: dicthash,v 1.2 2005/06/17 13:38:57 chg Exp $
+#
+# dicthash - create hash files for dict.cgi
+#
+# Created: Thu,  7 Apr 2005 13:27:36 +0500 CHG
+#
+
+$hash_ext = 'hash';
+$enc = 'utf8';
+
+unless(@ARGV == 1) {
+	print STDERR "Usage: $0 <data_path>\n";
+	exit 1;
+}
+
+$data_path = shift @ARGV;
+
+unless(-d $data_path) {
+	print STDERR "$data_path: no such directory\n";
+	exit 1;
+}
+
+$data_path .= '/' if $data_path !~ m|/$|;
+
+$re_skip = qr(^00-);
+$re_offset = qr(^.*?\t(.*?)\t);
+
+foreach $name (<$data_path*.dict>) {
+	$name =~ s/\.dict$//;
+	next unless open(INDEX, "<:$enc", "$name.index") &&
+		open(OUT, ">:$enc", "$name.$hash_ext");
+
+	$count = 0;
+	$old = '\x00';
+	$offset = 0;
+
+	while(<INDEX>) {
+		$count++ unless /$re_skip/;
+
+		my $key = lc(substr($_, 0, 1));
+
+		if(($key gt $old) && /$re_offset/) {
+			print OUT "$key $offset\n";
+			$old = $key;
+		}
+		$offset = tell(INDEX);
+	}
+
+	print OUT "Words $count\n";
+
+
+	close INDEX;
+	close OUT;
+}

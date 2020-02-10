@@ -1,0 +1,4 @@
+Release 3.1
+	
+	* New script `src/scripts/conv' allows optionally convert phonetic
+	transcription into the IPA Unicode (see option -p).

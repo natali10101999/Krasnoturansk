@@ -1,0 +1,166 @@
+#! /usr/bin/perl -w
+#
+# validate sections order in dictionary database
+#
+# created: Fri, 21 Jul 2005 18:40:06 +0500 CHG
+
+use File::Basename;
+
+use Getopt::Std;
+$Getopt::Std::STANDARD_HELP_VERSION = 1;
+
+$name = basename($0);
+$exit_code = 0;
+$l1 = $l2 = $l3 = $l1_f = $l2_f = $l3_f = 0;
+$new_par = 0;
+
+getopts('th', \%opts) or HELP_MESSAGE(STDERR) && exit(1);
+$opts{h} and HELP_MESSAGE(STDERR) && exit;
+$opts{t} and $term = 1;
+
+@err_msg = (
+	"[1] Single L_%s list item before line %s",
+	"[2] Wrong sequence of L_%s list items: line %s",
+	"[3] First L_%s list item encountered after item of lower level: line %s",
+	"[4] Illegal Roman numeral at begin of line %s%s",
+);
+
+sub error {
+	my($err, $level, $line) = @_;
+
+	printf STDERR ("$name: $err_msg[$err-1]\n", $level, $line);
+	$term && exit(1);
+	$exit_code = 1;
+}
+
+while(<>) {
+	if(/^_____/) {  #begin of article
+		$l1 == 1 && error(1, 1, $.);
+		$l2 == 1 && error(1, 2, $.);
+		$l3 == 1 && error(1, 3, $.);
+
+		$l1 = $l2 = $l3 = $l1_f = $l2_f = $l3_f = 0;
+	} elsif(($d) = /^[ \t]+([IVX]+)(?: |$)/) {  # 1 level
+		next unless $new_par;  # begin from new paragraph
+
+		$l2 == 1 && error(1, 2, $.);
+		$l3 == 1 && error(1, 3, $.);
+
+		$l1_f = 1;
+		$l2 = $l3 = 0;
+
+		error(4, '', $.) unless $t = r2a($d);
+
+		$l1++;
+		#print "$. - |$d| - $l1 - $t\n" if $l1 != $t;
+
+		$l1 != $t && error(2, 1, $.);
+		$l1 == 1 && ($l2_f || $l3_f) && error(3, 1, $.);
+
+		$l2_f = $l3_f = 0;
+	} elsif(($d) = /^[ \t]*(\d+)\.(?: |$)/) {  # 2 level
+		next unless $new_par;
+
+		$l2_f = 1;
+
+		$l3 == 1 && error(1, 3, $.);
+		$l3 = 0;
+
+		$l2++;
+		print "$. - |$d| - $l2\n" if $l2 != $d;
+
+		$l2 != $d && error(2, 2, $.);
+		$l2 == 1 && $l3_f && error(3, 2, $.);
+
+		$l3_f = 0;
+	} elsif(($d) = /^[ \t]*(\d+)\):? /) {  # 3 level
+		next unless $new_par;
+
+		$l3_f = 1;
+
+		$l3++;
+		#print "$. - |$d| - $l3\n" if  $l3 != $d;
+
+		$l3 != $d && error(2, 3, $.);
+	}
+
+	$new_par = /^[ \t]*$/;
+}
+
+$l1 == 1 && error(1, 1, $.);
+$l2 == 1 && error(1, 2, $.);
+$l3 == 1 && error(1, 3, $.);
+
+exit($exit_code);
+
+
+#
+# validate and convert roman numerals in range 1-3999
+#
+sub r2a {
+	$_ = shift;
+
+	my $a = do {
+		s/^MMM//  && 3 ||
+		s/^MM//   && 2 ||
+		s/^M//    && 1 ||
+		0
+	} * 1000;
+
+	$a += do {
+		s/^CM//   && 9 ||
+		s/^DCCC// && 8 ||
+		s/^DCC//  && 7 ||
+		s/^DC//   && 6 ||
+		s/^D//    && 5 ||
+		s/^CD//   && 4 ||
+		s/^CCC//  && 3 ||
+		s/^CC//   && 2 ||
+		s/^C//    && 1 ||
+		0
+	} * 100;
+
+	$a += do {
+		s/^XC//   && 9 ||
+		s/^LXXX// && 8 ||
+		s/^LXX//  && 7 ||
+		s/^LX//   && 6 ||
+		s/^L//    && 5 ||
+		s/^XL//   && 4 ||
+		s/^XXX//  && 3 ||
+		s/^XX//   && 2 ||
+		s/^X//    && 1 ||
+		0
+	} * 10;
+
+	$a += do {
+		s/^IX//   && 9 ||
+		s/^VIII// && 8 ||
+		s/^VII//  && 7 ||
+		s/^VI//   && 6 ||
+		s/^V//    && 5 ||
+		s/^IV//   && 4 ||
+		s/^III//  && 3 ||
+		s/^II//   && 2 ||
+		s/^I//    && 1 ||
+		0
+	}; 
+
+	return length() ? undef : $a;
+}
+sub HELP_MESSAGE {
+    my $fh = shift;
+
+    print $fh <<EOL;
+Using:
+  $0 [-h|-t] [FILE]
+
+Options:
+  -t                  terminate after first error
+  -h, --help          give this help and exit
+EOL
+}
+
+sub VERSION_MESSAGE {}
+
+__END__

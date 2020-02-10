@@ -1,0 +1,48 @@
+#! /bin/bash
+# $Id: mkdatadir,v 1.2 2005/06/17 13:38:57 chg Exp $
+#
+# mkdatadir - create database files for dict.cgi
+#
+
+if [ $# -lt 1 ]; then
+	echo "Usage $0 <src_dir> [<dest_dir>]"
+	exit 1
+fi
+
+src="$1"
+dest=${2:-$1}
+path_to_scripts=${0%/*}
+
+if [ ! -d "$dest" ]; then
+	mkdir -p "$dest"
+else
+	while true; do
+		read -p"Directory '$dest' already exists. Override files? [yn]: "
+		case $REPLY in
+			y|Y) break;;
+			n|N) exit 0;;
+		esac
+	done
+fi
+
+if [ `(cd $src;pwd)` != `(cd $dest;pwd)` ]; then
+	echo "Copying files..."
+	for file in "$src"/mueller-*.{dict.dz,index} \
+		"$src"/mueller-*/mueller-*.{dict.dz,index}; do
+		if [ -f "$file" ]; then
+			echo "  $file"
+			cp "$file" "$dest"
+		fi
+	done
+fi
+
+echo "Decompressing..."
+for name in "$dest"/*.dict.dz; do
+	if [ -r $name ]; then dictunzip -f "$name"; fi
+done
+
+echo "Creating hashs..."
+"$path_to_scripts"/dicthash "$dest"
+
+echo "Done."
+exit 0

@@ -1,0 +1,124 @@
+#! /usr/bin/perl -w
+#
+# convert--generates a set of html files with different encodings from template
+#
+# created: Wed, 18 May 2005 23:52:32 +0500 CHG
+#
+
+use Shell qw(iconv cp);
+
+@charsets = ([qw(UNIX koi8-r)], [qw(Windows windows-1251)], [qw(ISO iso88595)],
+	[qw(DOS cp866)], [qw(UTF utf8)], [qw(Mac mac-cyrillic)]);
+
+error("Usage: $0 <input_file>") unless @ARGV == 1;
+
+$in_file = $ARGV[0];
+
+$charset = get_charset($in_file);
+error("Cannot determine input charset") unless defined($charset);
+
+$charset = normalize($charset);
+
+foreach $r (@charsets) {
+	my $c = $r->[1];
+	$in_charset = $c, last if normalize($c) eq $charset;
+}
+error("Cannot convert from '$charset'") unless defined($in_charset);
+print STDERR "Input charset: $in_charset\n";
+
+LOOP: foreach $r (@charsets) {
+	my $out_charset = $r->[1];
+
+	$out_file = filename($out_charset);
+	print STDERR "$out_file:";
+
+	if($out_file eq $in_file) {
+		print STDERR " coincide with initial file. Skip.\n";
+		next;
+	}
+	if(-e $out_file) {
+		print STDERR " file exists. Override? [yn]: ";
+		while(<STDIN>) {
+			if(/^y$/i) {last;} elsif(/^n$/i) {next LOOP;}
+			elsif(/^a$/i) {exit 0;};
+			print STDERR "[y]es, [n]o or [a]bort] ?: ";
+		}
+	}
+	
+	print STDERR " writing... ";
+
+	if($in_charset ne $out_charset) {
+		iconv("-f$in_charset", "-t$out_charset", "$in_file", ">$out_file");
+	} else {
+		cp($in_file, $out_file);
+	}
+	print STDERR "OK\n" unless $?;
+
+	set_charset($out_file, $out_charset);
+}
+
+exit(0);
+
+
+sub normalize {
+	my $s = lc(shift);
+	$s =~ s/\W|_//g;
+	return $s;
+}
+
+sub error {
+	print STDERR @_, "\n";
+	exit 1;
+}
+
+sub set_charset {
+	($file, $charset) = @_;
+
+	local $^I = '';
+	@ARGV = ($file);
+
+	while(<>) {
+		if(m|<head>| .. m|</head>|) {
+			s|(<meta\s[^>]*\scharset=)(?:[^"']+)|$1$charset|;
+		} else {
+			s|(<!--insert menu here-->)|$1.create_menu($charset)|e;
+		}
+		print;
+	}
+}
+
+sub get_charset {
+	my $file = shift;
+	my $charset;
+
+	open(FILE, $file) or die("$file: $!");
+	while(<FILE>) {
+		if(m|<head>| .. m|</head>|) {
+			last if ($charset) = m|<meta\s[^>]*\scharset=([^"']+)|i;
+		}
+	}
+
+	return $charset;
+}
+
+sub create_menu {
+	my $charset = normalize(shift);
+	my $menu = 'Select charset:<br />';
+	my $menu_active = '-&nbsp;<a href=%s>%s</a><br />';
+	my $menu_inactive = '-&nbsp;%s<br />';
+
+
+	foreach $r (@charsets) {
+		my($label, $c) = @$r;
+		$menu .= $charset ne normalize($c) ?
+			sprintf($menu_active, filename($c), $label) :
+			sprintf($menu_inactive, $label);
+	}
+
+	return $menu;
+}
+
+sub filename {
+	return 'index-'.normalize(shift).'.html';
+}
+__END__
