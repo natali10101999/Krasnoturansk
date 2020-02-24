@@ -16,12 +16,12 @@ namespace ConvertDict
             var text = File.ReadAllText(path).Split(new string[] { "_____\n\n" }, StringSplitOptions.None);
             foreach (var entry in text)
             {
+               
                 if (entry.StartsWith("@")) continue;
                 var dictEntry = DictEntry.Parse(entry);
 
-                if (res.Words.ContainsKey(dictEntry.Word)) continue;
-
-                res.Words.Add(dictEntry.Word, dictEntry);
+                if (!res.Words.ContainsKey(dictEntry.Word.ToLower()))    
+                    res.Words.Add(dictEntry.Word.ToLower().Trim(), dictEntry);
                 
             }
 
@@ -33,12 +33,44 @@ namespace ConvertDict
     {
         public string Word;
         public string Description;
+        public string Transcription;
+        public List<string> Tags;
+        
         public static DictEntry Parse(string entry) 
         {
             var i = entry.IndexOf("\n\n"); 
             var res = new DictEntry();
+            res.Tags = new List<string>();
             res.Word = entry.Substring(0, i);
-            res.Description = entry.Substring(i + 2);
+            var tmp = entry.Substring(i + 2).Trim();
+
+            
+            if (tmp[0] == '[')
+            {
+                var trEnd = tmp.IndexOf(']');
+                res.Transcription = tmp.Substring(0, trEnd+1);
+                tmp = tmp.Substring(trEnd+1).Trim();
+                while (8 == 8)
+                {
+                    if (tmp.StartsWith("_"))
+                    {
+                        var dotPos = tmp.IndexOf('.');
+                        res.Tags.Add(tmp.Substring(0, dotPos + 1));
+                        tmp = tmp.Substring(dotPos + 1).Trim();
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                res.Description = tmp;
+            }
+            else 
+            {
+                res.Description = tmp;
+            }
+            
+
             return res;
         }
     }
