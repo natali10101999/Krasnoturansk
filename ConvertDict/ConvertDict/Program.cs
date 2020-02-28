@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using ENRUSDict;
 
 namespace ConvertDict
 {
@@ -12,12 +13,13 @@ namespace ConvertDict
     {
         static void Main(string[] args)
         {
-            var d = Dict.Load(@"..\..\..\..\mueller-dict-3.1.1\src\mueller-base");
+            var d = Dict.Load(@"..\..\..\..\Data\ENRUS.TXT");
             W.Dict = d;
-
+            W.StopWords = new HashSet<string>(File.ReadAllLines(@"..\..\..\..\Data\StopWords.txt"));
             var txt = File.ReadAllText(@"..\..\..\..\Data\O'Henry.txt");
             var t = Text.Parse(txt);
-
+            
+            t.Save().Save(@"..\..\..\..\Data\O'Henry.xml");
         }
 
         private static void Abc()

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
+using ENRUSDict;
 
 namespace ConvertDict
 {
@@ -24,6 +26,17 @@ namespace ConvertDict
             }
 
             return res;
+        }
+        public XElement Save()
+        {
+            var xRes = new XElement("p");
+            foreach (var i in Senteces)
+            {
+                var xS = i.Save();
+                xRes.Add(xS);
+            }
+
+            return xRes;
         }
     }
     /// <summary>
@@ -50,6 +63,22 @@ namespace ConvertDict
             return res;
         }
 
+        public XElement Save()
+        {
+            var xRes = new XElement("s");
+            xRes.Add(new XElement("t", Text));
+            var xWords = new XElement("words");
+            foreach (var i in Words)
+            {
+                var xW = i.Save();
+                xWords.Add(xW);
+            }
+
+            xRes.Add(xWords);
+
+            return xRes;
+        }
+
         public override string ToString()
         {
             return Text;
@@ -65,13 +94,14 @@ namespace ConvertDict
         public string Article;
 
         public static Dict Dict;
+        public static HashSet<string> StopWords;
 
         public static W Parse(string text)
         {
             var res = new W();
-
             var key = text.ToLower();
-            if (Dict.Words.ContainsKey(key))
+
+            if (Dict.Words.ContainsKey(key) /*&& !StopWords.Contains(key)*/)
             {
                 var article = Dict.Words[text.ToLower()];
                 res.Key = article.Word;
@@ -85,10 +115,20 @@ namespace ConvertDict
             return res;
         }
 
+        public XElement Save()
+        {
+            var xRes = new XElement("w");
+            xRes.Value = Article ?? "";
+            xRes.Add(new XAttribute("key", Key));
+            xRes.Add(new XAttribute("t", Transcription ?? ""));
+            return xRes;
+        }
+
         public override string ToString()
         {
             return Key + " " + Article;
         }
+
     }
     class Text
     {
@@ -104,6 +144,17 @@ namespace ConvertDict
             }
 
             return res;
+        }
+        public XElement Save()
+        {
+            var xRes = new XElement("text");
+            foreach (var i in Paragraphs)
+            {
+                var xP = i.Save();
+                xRes.Add(xP);
+            }
+
+            return xRes;
         }
     }
 }
